@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import type { IController, IRequest, IResponse } from '../../interfaces/IController';
 import type { SignInUseCase } from '../../useCases/account/SignInUseCase';
-import type { RegisterRefreshTokenUseCase } from '../../useCases/refreshToken/RegisterRefreshToken';
+import type { RegisterRefreshTokenUseCase } from '../../useCases/refreshToken/RegisterRefreshTokenUseCase';
 
 const schema = z.object({
   email: z.string().email(),
