@@ -1,10 +1,10 @@
 import type { IMiddleware, IRequest, IResponse } from '../interfaces/IMiddleware';
-import type { GetMyRolesPermissionsUseCase } from '../useCases/role/GetMyRolesPermissionsUseCase';
+import type { GetMyRolePermissionsUseCase } from '../useCases/role/GetMyRolePermissionsUseCase';
 
 export class AuthorizationMiddleware implements IMiddleware {
   constructor(
     private readonly requiredPermissions: string[],
-    private readonly getMyRolesPermissionsUseCase: GetMyRolesPermissionsUseCase,
+    private readonly getMyRolePermissionsUseCase: GetMyRolePermissionsUseCase,
   ) {}
   async handle({ account: { role } }: IRequest): Promise<IResponse> {
     if (!role) {
@@ -14,7 +14,7 @@ export class AuthorizationMiddleware implements IMiddleware {
       };
     }
 
-    const permissionCodes = await this.getMyRolesPermissionsUseCase.execute({
+    const permissionCodes = await this.getMyRolePermissionsUseCase.execute({
       roleId: role,
     });
 

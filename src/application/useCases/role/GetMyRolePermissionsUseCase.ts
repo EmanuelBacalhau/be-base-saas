@@ -8,7 +8,7 @@ interface IOutput {
   permissionCodes: string[];
 }
 
-export class GetMyRolesPermissionsUseCase {
+export class GetMyRolePermissionsUseCase {
   async execute({ roleId }: IInput): Promise<IOutput> {
     const rolePermissions = await prismaClient.rolePermissions.findMany({
       where: {
