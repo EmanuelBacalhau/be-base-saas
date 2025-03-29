@@ -1,7 +1,9 @@
-import { z } from 'zod';
+import { z, ZodError } from 'zod';
 import type { IController, IRequest, IResponse } from '../../interfaces/IController';
 import type { SignInUseCase } from '../../useCases/account/SignInUseCase';
-import type { RegisterRefreshTokenUseCase } from '../../useCases/refreshToken/RegisterRefreshTokenUseCase';
+import type { RegisterRefreshTokenUseCase } from '../../useCases/account/RegisterRefreshTokenUseCase';
+import { constants } from '../../config/contants';
+import { InvalidCredentialsError } from '../../errors/InvalidCredentialsError';
 
 const schema = z.object({
   email: z.string().email(),
@@ -19,7 +21,7 @@ export class SignInController implements IController {
 
       const { accountId } = await this.signInUseCase.execute(data);
       const expiresAt = new Date();
-      expiresAt.setDate(expiresAt.getDate() + 1);
+      expiresAt.setDate(expiresAt.getDate() + constants.REFRESH_TOKEN_EXPIRATION_DAYS);
 
       const { refreshToken } = await this.registerRefreshToken.execute({
         accountId,
@@ -45,11 +47,20 @@ export class SignInController implements IController {
         },
       };
     } catch (error) {
-      if (error instanceof z.ZodError) {
+      if (error instanceof ZodError) {
         return {
           statusCode: 400,
           body: {
             message: error.issues,
+          },
+        };
+      }
+
+      if (error instanceof InvalidCredentialsError) {
+        return {
+          statusCode: 401,
+          body: {
+            message: 'Invalid credentials',
           },
         };
       }

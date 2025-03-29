@@ -1,5 +1,5 @@
 import { SignInController } from '../../application/controllers/account/SignInController';
-import { makeRegisterTokenUseCase } from '../refreshToken/makeRegisterTokenUseCase';
+import { makeRegisterTokenUseCase } from './makeRegisterTokenUseCase';
 import { makeSignInUseCase } from './makeSignInUseCase';
 
 export function makeSignInController() {

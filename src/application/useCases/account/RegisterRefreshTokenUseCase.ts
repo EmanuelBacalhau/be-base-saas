@@ -13,15 +13,22 @@ export class RegisterRefreshTokenUseCase {
   async execute(data: IInput): Promise<IOutput> {
     const { accountId, expiresAt } = data;
 
-    const refreshToken = await prismaClient.refreshToken.create({
-      data: {
-        accountId,
-        expiresAt
-      },
-      select: {
-        id: true,
-      }
-    });
+    const [, refreshToken] = await Promise.all([
+      prismaClient.refreshToken.deleteMany({
+        where: {
+          accountId,
+        },
+      }),
+      prismaClient.refreshToken.create({
+        data: {
+          accountId,
+          expiresAt,
+        },
+        select: {
+          id: true,
+        },
+      }),
+    ]);
 
     return {
       refreshToken: refreshToken.id,
