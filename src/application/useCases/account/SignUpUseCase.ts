@@ -1,5 +1,5 @@
 import { env } from '../../config/env';
-import { AccountAlreadyExists } from '../../errors/AccountAlreadyExists';
+import { AccountAlreadyExistsError } from '../../errors/AccountAlreadyExistsError';
 import { prismaClient } from '../../libs/prismaClient';
 import { hash } from 'bcryptjs';
 
@@ -9,7 +9,7 @@ interface IInput {
   password: string;
 }
 
-type IOutput = void
+type IOutput = void;
 
 export class SignUpUseCase {
   async execute(params: IInput): Promise<IOutput> {
@@ -20,7 +20,7 @@ export class SignUpUseCase {
     });
 
     if (accountAlreadyExists) {
-      throw new AccountAlreadyExists();
+      throw new AccountAlreadyExistsError();
     }
 
     const passwordHash = await hash(params.password, env.BCRYPT_SALT);
