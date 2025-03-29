@@ -1,3 +1,4 @@
 export const constants = {
   REFRESH_TOKEN_EXPIRATION_DAYS: 1,
+  ACCESS_TOKEN_EXPIRATION_HOURS: '1h',
 };

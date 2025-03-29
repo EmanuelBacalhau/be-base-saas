@@ -7,7 +7,7 @@ export function routeAdapter(controller: IController) {
       body: request.body as Record<string, unknown>,
       params: request.params as Record<string, string>,
       queryParameters: request.query as Record<string, string>,
-      jwtSign: reply.jwtSign,
+      jwt: request.jwt,
     });
 
     reply.code(response.statusCode).send(response.body);

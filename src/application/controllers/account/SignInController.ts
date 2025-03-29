@@ -28,16 +28,14 @@ export class SignInController implements IController {
         expiresAt,
       });
 
-      const token = await request.jwtSign({
-        payload: {
-          accountId,
+      const token = request.jwt.sign(
+        {
+          sub: accountId,
         },
-        options: {
-          sign: {
-            expiresIn: '1h',
-          },
+        {
+          expiresIn: constants.ACCESS_TOKEN_EXPIRATION_HOURS,
         },
-      });
+      );
 
       return {
         statusCode: 200,

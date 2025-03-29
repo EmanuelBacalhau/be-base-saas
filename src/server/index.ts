@@ -9,6 +9,11 @@ app.register(fastifyJwt, {
   secret: env.JWT_SECRET,
 });
 
+app.addHook('preHandler', (req, res, next) => {
+  req.jwt = app.jwt;
+  return next();
+});
+
 app.register(routes);
 
 app.listen(

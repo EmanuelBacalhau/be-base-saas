@@ -2,6 +2,7 @@ import { z, ZodError } from 'zod';
 import type { IController, IRequest, IResponse } from '../../interfaces/IController';
 import type { RefreshTokenUseCase } from '../../useCases/account/RefreshTokenUseCase';
 import { ExpiresTokenError } from '../../errors/ExpiresTokenError';
+import { constants } from '../../config/contants';
 
 const schema = z.object({
   refreshToken: z.string().uuid(),
@@ -16,13 +17,13 @@ export class RefreshTokenController implements IController {
 
       const { refreshToken } = await this.refreshTokenUseCase.execute(data);
 
-      const token = await request.jwtSign({
+      const token = request.jwt.sign({
         payload: {
           refreshToken,
         },
         options: {
           sign: {
-            expiresIn: '1h',
+            expiresIn: constants.ACCESS_TOKEN_EXPIRATION_HOURS,
           },
         },
       });

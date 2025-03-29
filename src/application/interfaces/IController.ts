@@ -1,15 +1,16 @@
-import type { FastifyJwtSignOptions, SignPayloadType } from '@fastify/jwt';
+interface SignOptions {
+  expiresIn?: string;
+}
 
-export interface IJwtSign {
-  payload: SignPayloadType;
-  options?: FastifyJwtSignOptions;
+interface JWT {
+  sign(payload: Record<string, unknown>, options?: SignOptions): string;
 }
 
 export interface IRequest {
   body: Record<string, unknown>;
   params: Record<string, string>;
   queryParameters: Record<string, string>;
-  jwtSign: (params: IJwtSign) => Promise<string>;
+  jwt: JWT;
 }
 
 export interface IResponse {
