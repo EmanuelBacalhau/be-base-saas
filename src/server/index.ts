@@ -21,6 +21,10 @@ app.listen(
     port: env.PORT,
   },
   () => {
-    console.log('Server is running on http://localhost:3001');
+    if (env.NODE_ENV === 'production') {
+      console.log('🚀 Server is running in PRODUCTION mode.');
+    } else {
+      console.log(`🚀 Server is running in DEVELOPMENT mode on http://localhost:${env.PORT}`);
+    }
   },
 );
