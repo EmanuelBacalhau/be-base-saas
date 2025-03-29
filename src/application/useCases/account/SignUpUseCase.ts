@@ -14,8 +14,6 @@ type IOutput = void;
 
 export class SignUpUseCase {
   async execute(params: IInput): Promise<IOutput> {
-    console.log('params', params);
-
     const accountAlreadyExists = await prismaClient.account.findUnique({
       where: {
         email: params.email,
