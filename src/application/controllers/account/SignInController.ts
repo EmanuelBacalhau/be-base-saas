@@ -19,7 +19,7 @@ export class SignInController implements IController {
     try {
       const data = schema.parse(request.body);
 
-      const { accountId } = await this.signInUseCase.execute(data);
+      const { accountId, roleId } = await this.signInUseCase.execute(data);
       const expiresAt = new Date();
       expiresAt.setDate(expiresAt.getDate() + constants.REFRESH_TOKEN_EXPIRATION_DAYS);
 
@@ -31,6 +31,7 @@ export class SignInController implements IController {
       const token = request.jwt.sign(
         {
           sub: accountId,
+          role: roleId,
         },
         {
           expiresIn: constants.ACCESS_TOKEN_EXPIRATION_HOURS,

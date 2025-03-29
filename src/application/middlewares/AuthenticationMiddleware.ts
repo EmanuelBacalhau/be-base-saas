@@ -21,14 +21,13 @@ export class AuthenticationMiddleware implements IMiddleware {
     }
 
     try {
-      const { sub } = await request.jwtVerify();
-
-      console.log('Payload:', await request.jwtVerify());
+      const { sub, role } = await request.jwtVerify();
 
       return {
         statusCode: 200,
         body: {
           accountId: sub,
+          role: role,
         },
       };
     } catch {

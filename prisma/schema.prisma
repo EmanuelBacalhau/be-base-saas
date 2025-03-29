@@ -8,11 +8,16 @@ datasource db {
 }
 
 model Account {
-  id            String         @id @default(uuid()) @db.Uuid
-  name          String
-  email         String         @unique
-  password      String
+  id       String @id @default(uuid()) @db.Uuid
+  name     String
+  email    String @unique
+  password String
+  roleId   String @map("role_id") @db.Uuid
+  // TODO: Create auto sign up
+
   refreshTokens RefreshToken[]
+
+  role Role @relation(fields: [roleId], references: [id])
 
   @@map("accounts")
 }
@@ -21,7 +26,39 @@ model RefreshToken {
   id        String   @id @default(uuid()) @db.Uuid
   accountId String   @map("account_id") @db.Uuid
   expiresAt DateTime @map("expires_at")
-  account   Account  @relation(fields: [accountId], references: [id])
+
+  account Account @relation(fields: [accountId], references: [id])
 
   @@map("refresh_tokens")
+}
+
+model Role {
+  id   String @id @default(uuid()) @db.Uuid
+  name String @unique
+
+  accounts    Account[]
+  permissions RolePermissions[]
+
+  @@map("roles")
+}
+
+model Permissions {
+  id   String @id @default(uuid()) @db.Uuid
+  name String @unique
+  code String @unique
+
+  roles RolePermissions[]
+
+  @@map("permissions")
+}
+
+model RolePermissions {
+  roleId         String @map("role_id") @db.Uuid
+  permissionCode String @map("permission_code")
+
+  role       Role        @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permissions @relation(fields: [permissionCode], references: [code], onDelete: Cascade)
+
+  @@id([roleId, permissionCode])
+  @@map("role_permissions")
 }

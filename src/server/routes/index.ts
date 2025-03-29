@@ -5,6 +5,7 @@ import { makeSignInController } from '../../factories/account/makeSignInControll
 import { makeRefreshTokenController } from '../../factories/account/makeRefreshTokenController';
 import { middlewareAdapter } from '../adapters/middlewareAdapter';
 import { makeAuthenticationMiddleware } from '../../factories/account/makeAuthenticationMiddleware';
+import { makeAuthorizationMiddleware } from '../../factories/account/makeAuthorizationMiddleware';
 
 export async function routes(app: FastifyInstance) {
   app.post('/sign-up', routeAdapter(makeSignUpController()));
@@ -18,7 +19,22 @@ export async function routes(app: FastifyInstance) {
     async (request, reply) => {
       return reply.send({
         message: 'Middleware works',
-        accountId: request.user.accountId,
+        accountId: request.account.id,
+      });
+    },
+  );
+  app.get(
+    '/test-middleware-authorization',
+    {
+      preHandler: [
+        middlewareAdapter(makeAuthenticationMiddleware()),
+        middlewareAdapter(makeAuthorizationMiddleware(['user:read'])),
+      ],
+    },
+    async (request, reply) => {
+      return reply.send({
+        message: 'Middleware works',
+        accountId: request.account.id,
       });
     },
   );

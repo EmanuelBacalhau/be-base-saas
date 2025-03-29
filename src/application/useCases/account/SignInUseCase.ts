@@ -9,6 +9,7 @@ interface IInput {
 
 interface IOutput {
   accountId: string;
+  roleId: string;
 }
 
 export class SignInUseCase {
@@ -33,6 +34,7 @@ export class SignInUseCase {
 
     return {
       accountId: account.id,
+      roleId: account.roleId,
     };
   }
 }
